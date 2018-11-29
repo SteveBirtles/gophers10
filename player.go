@@ -141,7 +141,7 @@ func (p *Player) draw() {
 
 	}
 
-	matrix := pixel.IM.Rotated(pixel.ZV, 0).Scaled(pixel.ZV, 4).Moved(pixel.Vec{X: p.screenX, Y: p.screenY})
+	matrix := pixel.IM.Rotated(pixel.ZV, 0).Scaled(pixel.ZV, 4).Moved(pixel.Vec{X: p.screenX - 8, Y: p.screenY - 16})
 	sprite[p.spriteRow][p.direction][p.frame].Draw(batch, matrix)
 
 }

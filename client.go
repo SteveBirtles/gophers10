@@ -7,6 +7,7 @@ import (
 	"golang.org/x/image/colornames"
 	"image"
 	_ "image/png"
+	"math/rand"
 	"os"
 	"time"
 )
@@ -22,7 +23,9 @@ var (
 	win    *pixelgl.Window
 
 	sprite [4][4][4]*pixel.Sprite
+	tile   [12]*pixel.Sprite
 	batch  *pixel.Batch
+	level  [12][9]int
 )
 
 func loadImageFile(path string) (image.Image, error) {
@@ -62,13 +65,23 @@ func startClient() {
 		for j := 0; j < 4; j++ {
 			for k := 0; k < 3; k++ {
 				sprite[i][j][k] = pixel.NewSprite(spritePic,
-					pixel.R(float64(k+j*3)*20, float64(120-30*(i+1)), float64(k+j*3+1)*20, float64(120-30*i)))
+					pixel.R(float64(k+j*3)*20, float64(140-30*(i+1)), float64(k+j*3+1)*20, float64(140-30*i)))
 			}
 			sprite[i][j][3] = sprite[i][j][1]
 		}
 	}
 
+	for i := 0; i < 12; i++ {
+		tile[i] = pixel.NewSprite(spritePic, pixel.R(float64(i)*20, float64(0), float64(i+1)*20, float64(20)))
+	}
+
 	batch = pixel.NewBatch(&pixel.TrianglesData{}, spritePic)
+
+	for x := 0; x < 12; x++ {
+		for y := 0; y < 9; y++ {
+			level[x][y] = rand.Intn(3)
+		}
+	}
 
 	mainLoop()
 
@@ -86,6 +99,22 @@ func mainLoop() {
 				player[i].updatePosition()
 			}
 		default:
+		}
+
+		for x := 0; x <= 13; x++ {
+			for y := 0; y <= 10; y++ {
+				matrix := pixel.IM.Rotated(pixel.ZV, 0).Scaled(pixel.ZV, 4).Moved(pixel.Vec{X: float64(x)*80 - 8, Y: float64(y)*80 - 16})
+				var t int
+
+				if x == 0 || y == 0 || x == 13 || y == 10 {
+					t = 1
+				} else {
+					t = level[x-1][y-1]
+				}
+
+				tile[t].Draw(batch, matrix)
+
+			}
 		}
 
 		for i := range player {
