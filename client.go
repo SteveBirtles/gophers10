@@ -7,7 +7,6 @@ import (
 	"golang.org/x/image/colornames"
 	"image"
 	_ "image/png"
-	"math/rand"
 	"os"
 	"time"
 )
@@ -77,10 +76,19 @@ func startClient() {
 
 	batch = pixel.NewBatch(&pixel.TrianglesData{}, spritePic)
 
-	for x := 0; x < 12; x++ {
-		for y := 0; y < 9; y++ {
-			level[x][y] = rand.Intn(3)
-		}
+	level = [12][9]int{
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
 	}
 
 	mainLoop()
@@ -103,7 +111,7 @@ func mainLoop() {
 
 		for x := 0; x <= 13; x++ {
 			for y := 0; y <= 10; y++ {
-				matrix := pixel.IM.Rotated(pixel.ZV, 0).Scaled(pixel.ZV, 4).Moved(pixel.Vec{X: float64(x)*80 - 8, Y: float64(y)*80 - 16})
+
 				var t int
 
 				if x == 0 || y == 0 || x == 13 || y == 10 {
@@ -112,6 +120,7 @@ func mainLoop() {
 					t = level[x-1][y-1]
 				}
 
+				matrix := pixel.IM.Rotated(pixel.ZV, 0).Scaled(pixel.ZV, 4).Moved(pixel.Vec{X: float64(x)*80 - 8, Y: float64(y)*80 - 16})
 				tile[t].Draw(batch, matrix)
 
 			}
